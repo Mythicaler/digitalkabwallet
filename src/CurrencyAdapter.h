@@ -1,7 +1,7 @@
 // Copyright (c) 2011-2015 The Cryptonote developers
+// Copyright (c) 2015 XDN developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
-
 
 #pragma once
 
@@ -20,6 +20,8 @@ public:
   QString getCurrencyDisplayName() const;
   QString getCurrencyName() const;
   QString getCurrencyTicker() const;
+  quint64 getMinimumFee() const;
+  quint64 getAddressPrefix() const;
   quintptr getNumberOfDecimalPlaces() const;
   QString formatAmount(quint64 _amount) const;
   quint64 parseAmount(const QString& _amountString) const;

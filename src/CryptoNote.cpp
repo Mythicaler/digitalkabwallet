@@ -1,7 +1,7 @@
 // Copyright (c) 2011-2015 The Cryptonote developers
+// Copyright (c) 2015 XDN developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
-
 
 #include "CryptoNote.h"
 #include "cryptonote_core/cryptonote_basic_impl.h"

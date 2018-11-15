@@ -1,7 +1,7 @@
 // Copyright (c) 2011-2015 The Cryptonote developers
+// Copyright (c) 2015 XDN developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
-
 
 #include "AddressBookModel.h"
 #include "CurrencyAdapter.h"
@@ -16,12 +16,12 @@
 
 namespace WalletGui {
 
-const quint64 MINIMAL_FEE = 1000000;
+Q_DECL_CONSTEXPR int DEFAULT_MIXIN = 2;
 
 SendFrame::SendFrame(QWidget* _parent) : QFrame(_parent), m_ui(new Ui::SendFrame) {
   m_ui->setupUi(this);
   clearAllClicked();
-  mixinValueChanged(m_ui->m_mixinSlider->value());
+  m_ui->m_mixinSlider->setValue(DEFAULT_MIXIN);
 
   connect(&WalletAdapter::instance(), &WalletAdapter::walletSendTransactionCompletedSignal, this, &SendFrame::sendTransactionCompleted,
     Qt::QueuedConnection);
@@ -29,9 +29,23 @@ SendFrame::SendFrame(QWidget* _parent) : QFrame(_parent), m_ui(new Ui::SendFrame
     Qt::QueuedConnection);
 
   m_ui->m_tickerLabel->setText(CurrencyAdapter::instance().getCurrencyTicker().toUpper());
+  m_ui->m_feeSpin->setSuffix(" " + CurrencyAdapter::instance().getCurrencyTicker().toUpper());
+  m_ui->m_feeSpin->setMinimum(CurrencyAdapter::instance().formatAmount(CurrencyAdapter::instance().getMinimumFee()).toDouble());
 }
 
 SendFrame::~SendFrame() {
+}
+
+void SendFrame::setAddress(const QString& _address) {
+  Q_FOREACH (TransferFrame* transfer, m_transfers) {
+    if (transfer->getAddress().isEmpty()) {
+      transfer->setAddress(_address);
+      return;
+    }
+  }
+
+  addRecipientClicked();
+  m_transfers.last()->setAddress(_address);
 }
 
 void SendFrame::addRecipientClicked() {
@@ -60,17 +74,17 @@ void SendFrame::clearAllClicked() {
   m_transfers.clear();
   addRecipientClicked();
   m_ui->m_paymentIdEdit->clear();
-  m_ui->m_mixinSlider->setValue(2);
+  m_ui->m_mixinSlider->setValue(DEFAULT_MIXIN);
+  m_ui->m_feeSpin->setValue(m_ui->m_feeSpin->minimum());
 }
 
 void SendFrame::sendClicked() {
   QVector<CryptoNote::Transfer> walletTransfers;
+  QVector<CryptoNote::TransactionMessage> walletMessages;
   Q_FOREACH (TransferFrame * transfer, m_transfers) {
     QString address = transfer->getAddress();
     if (!CurrencyAdapter::instance().validateAddress(address)) {
-      QCoreApplication::postEvent(
-        &MainWindow::instance(),
-        new ShowMessageEvent(tr("Invalid recipient address"), QtCriticalMsg));
+      QCoreApplication::postEvent(&MainWindow::instance(), new ShowMessageEvent(tr("Invalid recipient address"), QtCriticalMsg));
       return;
     }
 
@@ -83,16 +97,22 @@ void SendFrame::sendClicked() {
     if (!label.isEmpty()) {
       AddressBookModel::instance().addAddress(label, address);
     }
+
+    QString comment = transfer->getComment();
+    if (!comment.isEmpty()) {
+      walletMessages.append(CryptoNote::TransactionMessage{comment.toStdString(), address.toStdString()});
+    }
   }
 
-  quint64 fee = MINIMAL_FEE;
-  if (fee < MINIMAL_FEE) {
-    QCoreApplication::postEvent(&MainWindow::instance(), new ShowMessageEvent(tr("Minimum allowed fee is 0.01"), QtCriticalMsg));
+  quint64 fee = CurrencyAdapter::instance().parseAmount(m_ui->m_feeSpin->cleanText());
+  if (fee < CurrencyAdapter::instance().getMinimumFee()) {
+    QCoreApplication::postEvent(&MainWindow::instance(), new ShowMessageEvent(tr("Incorrect fee value"), QtCriticalMsg));
     return;
   }
 
   if (WalletAdapter::instance().isOpen()) {
-    WalletAdapter::instance().sendTransaction(walletTransfers, fee, m_ui->m_paymentIdEdit->text(), m_ui->m_mixinSlider->value());
+    WalletAdapter::instance().sendTransaction(walletTransfers, fee, m_ui->m_paymentIdEdit->text(), m_ui->m_mixinSlider->value(),
+      walletMessages);
   }
 }
 
@@ -100,11 +120,13 @@ void SendFrame::mixinValueChanged(int _value) {
   m_ui->m_mixinEdit->setText(QString::number(_value));
 }
 
-void SendFrame::sendTransactionCompleted(CryptoNote::TransactionId _id, bool _result, const QString& _errorText) {
+void SendFrame::sendTransactionCompleted(CryptoNote::TransactionId _id, bool _error, const QString& _errorText) {
   Q_UNUSED(_id);
-  Q_UNUSED(_result);
-  Q_UNUSED(_errorText);
-  clearAllClicked();
+  if (_error) {
+    QCoreApplication::postEvent(&MainWindow::instance(), new ShowMessageEvent(_errorText, QtCriticalMsg));
+  } else {
+    clearAllClicked();
+  }
 }
 
 void SendFrame::walletActualBalanceUpdated(quint64 _balance) {

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=digitalkab Wallet
+Comment=digitalkab wallet
+Exec=digitalkabwallet
+Terminal=false
+Type=Application
+Icon=digitalkab
+MimeType=x-scheme-handler/digitalkabwallet;
+Categories=Office;Finance;

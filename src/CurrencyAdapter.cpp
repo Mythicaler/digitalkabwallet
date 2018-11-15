@@ -1,7 +1,7 @@
 // Copyright (c) 2011-2015 The Cryptonote developers
+// Copyright (c) 2015 XDN developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
-
 
 #include "CurrencyAdapter.h"
 #include "CryptoNoteWalletConfig.h"
@@ -37,6 +37,14 @@ QString CurrencyAdapter::getCurrencyName() const {
 
 QString CurrencyAdapter::getCurrencyTicker() const {
   return WALLET_CURRENCY_TICKER;
+}
+
+quint64 CurrencyAdapter::getMinimumFee() const {
+  return m_currency.minimumFee();
+}
+
+quint64 CurrencyAdapter::getAddressPrefix() const {
+  return m_currency.publicAddressBase58Prefix();
 }
 
 QString CurrencyAdapter::formatAmount(quint64 _amount) const {

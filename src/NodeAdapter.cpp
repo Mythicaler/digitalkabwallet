@@ -1,7 +1,7 @@
 // Copyright (c) 2011-2015 The Cryptonote developers
+// Copyright (c) 2015 XDN developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
-
 
 #include <QCoreApplication>
 #include <QDateTime>
@@ -111,8 +111,7 @@ CryptoNote::IWallet* NodeAdapter::createWallet() const {
 
 bool NodeAdapter::init() {
   Q_ASSERT(m_node == nullptr);
-  // TODO Insert the right URL for the local daemon
-  QUrl localNodeUrl = QUrl::fromUserInput("");
+  QUrl localNodeUrl = QUrl::fromUserInput(QString("127.0.0.1:%1").arg(cryptonote::RPC_DEFAULT_PORT));
 
   m_node = createRpcNode(CurrencyAdapter::instance().getCurrency(), *this, localNodeUrl.host().toStdString(), localNodeUrl.port());
 
