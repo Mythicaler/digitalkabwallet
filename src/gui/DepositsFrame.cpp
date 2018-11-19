@@ -1,5 +1,5 @@
-// Copyright (c) 2011-2015 The Cryptonote developers
-// Copyright (c) 2015 XDN developers
+// Copyright (c) 2011-2016 The Cryptonote developers
+// Copyright (c) 2015-2016 XDN developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -47,17 +47,18 @@ QString secondsToNativeTime(int _seconds) {
 
 DepositsFrame::DepositsFrame(QWidget* _parent) : QFrame(_parent), m_ui(new Ui::DepositsFrame), m_depositModel(new DepositListModel) {
   m_ui->setupUi(this);
-  m_ui->m_amountSpin->setSuffix(" " + CurrencyAdapter::instance().getCurrencyTicker().toUpper());
-  m_ui->m_amountSpin->setMinimum(CurrencyAdapter::instance().formatAmount(CurrencyAdapter::instance().getDepositMinAmount()).toDouble());
-  m_ui->m_amountSpin->setDecimals(CurrencyAdapter::instance().getNumberOfDecimalPlaces());
   m_ui->m_timeSpin->setMinimum(CurrencyAdapter::instance().getDepositMinTerm());
   m_ui->m_timeSpin->setMaximum(CurrencyAdapter::instance().getDepositMaxTerm());
   m_ui->m_timeSpin->setSuffix(QString(" %1").arg(tr("Blocks")));
+  m_ui->m_amountSpin->setSuffix(" " + CurrencyAdapter::instance().getCurrencyTicker().toUpper());
+  m_ui->m_amountSpin->setMinimum(CurrencyAdapter::instance().formatAmount(CurrencyAdapter::instance().getDepositMinAmount()).toDouble());
+  m_ui->m_amountSpin->setDecimals(CurrencyAdapter::instance().getNumberOfDecimalPlaces());
   m_ui->m_depositView->setModel(m_depositModel.data());
 
   m_ui->m_tickerLabel1->setText(CurrencyAdapter::instance().getCurrencyTicker().toUpper());
   m_ui->m_tickerLabel2->setText(CurrencyAdapter::instance().getCurrencyTicker().toUpper());
   m_ui->m_tickerLabel3->setText(CurrencyAdapter::instance().getCurrencyTicker().toUpper());
+  m_ui->m_feeLabel->setText(tr("%1 %2").arg(CurrencyAdapter::instance().formatAmount(CurrencyAdapter::instance().getMinimumFee())).arg(CurrencyAdapter::instance().getCurrencyTicker().toUpper()));
 
   connect(&WalletAdapter::instance(), &WalletAdapter::walletActualDepositBalanceUpdatedSignal,
     this, &DepositsFrame::actualDepositBalanceUpdated, Qt::QueuedConnection);

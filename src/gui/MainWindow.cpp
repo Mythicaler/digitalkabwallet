@@ -1,5 +1,5 @@
-// Copyright (c) 2011-2015 The Cryptonote developers
-// Copyright (c) 2015 XDN developers
+// Copyright (c) 2011-2016 The Cryptonote developers
+// Copyright (c) 2015-2016 XDN developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -10,8 +10,8 @@
 #include <QSystemTrayIcon>
 #include <QTimer>
 
-#include <common/base58.h>
-#include <common/util.h>
+#include <Common/Base58.h>
+#include <Common/Util.h>
 
 #include "AboutDialog.h"
 #include "AddressBookModel.h"
@@ -72,6 +72,13 @@ void MainWindow::connectToSignals() {
   connect(&WalletAdapter::instance(), &WalletAdapter::walletTransactionCreatedSignal, this, [this]() {
     QApplication::alert(this);
   });
+
+  connect(&WalletAdapter::instance(), &WalletAdapter::walletSendTransactionCompletedSignal, this, [this](CryptoNote::TransactionId _transactionId, int _error, const QString& _errorString) {
+    if (_error == 0) {
+      m_ui->m_transactionsAction->setChecked(true);
+    }
+  });
+
   connect(&NodeAdapter::instance(), &NodeAdapter::peerCountUpdatedSignal, this, &MainWindow::peerCountUpdated, Qt::QueuedConnection);
   connect(m_ui->m_exitAction, &QAction::triggered, qApp, &QApplication::quit);
   connect(m_ui->m_messagesFrame, &MessagesFrame::replyToSignal, this, &MainWindow::replyTo);
@@ -275,8 +282,8 @@ void MainWindow::importKey() {
 
     uint64_t addressPrefix;
     std::string data;
-    CryptoNote::WalletAccountKeys keys;
-    if (tools::base58::decode_addr(keyString.toStdString(), addressPrefix, data) && addressPrefix == CurrencyAdapter::instance().getAddressPrefix() &&
+    CryptoNote::AccountKeys keys;
+    if (Tools::Base58::decode_addr(keyString.toStdString(), addressPrefix, data) && addressPrefix == CurrencyAdapter::instance().getAddressPrefix() &&
       data.size() == sizeof(keys)) {
       std::memcpy(&keys, data.data(), sizeof(keys));
       if (WalletAdapter::instance().isOpen()) {

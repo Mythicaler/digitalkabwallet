@@ -1,5 +1,5 @@
-// Copyright (c) 2011-2015 The Cryptonote developers
-// Copyright (c) 2015 XDN developers
+// Copyright (c) 2011-2016 The Cryptonote developers
+// Copyright (c) 2015-2016 XDN developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -43,7 +43,11 @@ private:
   void onAliasFound(const QString& _name, const QString& _address);
   Q_SLOT void addressBookClicked();
   Q_SLOT void addressEdited(const QString& _text);
+  Q_SLOT void commentEdited(const QString& _text);
   Q_SLOT void pasteClicked();
+
+Q_SIGNALS:
+  void commentEditedSignal();
 };
 
 }
