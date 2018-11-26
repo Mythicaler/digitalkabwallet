@@ -1,4 +1,4 @@
-# digitalkabwallet
+ # digitalkabwallet
 The GUI digitalkabWallet
  # Contributing to the digitalkabXDN Project
 
@@ -10,9 +10,10 @@ Things will be a bit slow to start off, so do not get impatient if your pull req
 ## General guidelines
 
 The "digitalkabXDN core Team" is defined as the following GitHub users:
-•AuCRHI
-•rainamp7
 
+ •AuCRHI
+ •rainmanp7
+ 
 At the moment we are using 3 preferred builds to develop and test software.
 These are based on Linux (Lubuntu ver 17.1) and Mac OS Sierra and Mac OS High Sierra.
 
