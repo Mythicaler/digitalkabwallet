@@ -1,0 +1,3 @@
+language: cpp
+os: osx
+script: cmake && make
