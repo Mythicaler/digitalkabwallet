@@ -205,7 +205,7 @@ elseif (UNIX)
     set(PLATFORM_DIR OSX)
     set(MACOSX_BUNDLE_INFO_STRING "Cryptonote GUI wallet")
     set(MACOSX_BUNDLE_LONG_VERSION_STRING "${VERSION_VERSION}.${VERSION_MINOR}.${VERSION_PATCH}")
-    set(MACOSX_BUNDLE_BUNDLE_NAME DigitalNoteWallet)
+    set(MACOSX_BUNDLE_BUNDLE_NAME digitalkabWallet)
     set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${VERSION_VERSION}.${VERSION_MINOR}.${VERSION_PATCH}")
     set(MACOSX_BUNDLE_BUNDLE_VERSION "$${VERSION_VERSION}.${VERSION_MINOR}.${VERSION_PATCH}")
 
@@ -259,8 +259,8 @@ qt5_use_modules(${PROJECT_NAME} Widgets Gui Network)
 
 set(CPACK_PACKAGE_NAME ${CN_PROJECT_NAME})
 set(CPACK_PACKAGE_VERSION ${CN_VERSION})
-set(CPACK_PACKAGE_VENDOR "DigitalNoteXDN")
-set(CPACK_PACKAGE_CONTACT "http://digitalnote.biz")
+set(CPACK_PACKAGE_VENDOR "digitalkabXDN")
+set(CPACK_PACKAGE_CONTACT "http://digitalkab.biz")
 set(CPACK_STRIP_FILES ON)
 if (APPLE)
     set(CPACK_GENERATOR DragNDrop)
@@ -270,24 +270,24 @@ elseif (UNIX)
     find_program(RPMBUILD rpmbuild)
 
     install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
-    install(FILES src/digitalnotewallet.desktop DESTINATION share/applications)
-    install(FILES src/images/cryptonote.png DESTINATION share/pixmaps RENAME digitalnote.png)
-    install(FILES copyright DESTINATION share/doc/digitalnotewallet)
+    install(FILES src/digitalkabwallet.desktop DESTINATION share/applications)
+    install(FILES src/images/cryptonote.png DESTINATION share/pixmaps RENAME digitalkab.png)
+    install(FILES copyright DESTINATION share/doc/digitalkabwallet)
 
     if (NOT RPMBUILD)
         set(CPACK_GENERATOR DEB)
         set(CPACK_DEBIAN_PACKAGE_NAME ${CPACK_PACKAGE_NAME})
         set(CPACK_SYSTEM_NAME amd64)
-        set(CPACK_DEBIAN_PACKAGE_MAINTAINER "${CPACK_PACKAGE_VENDOR} <dev@digitalnote.biz>")
+        set(CPACK_DEBIAN_PACKAGE_MAINTAINER "${CPACK_PACKAGE_VENDOR} <dev@digitalkab.biz>")
         set(CPACK_DEBIAN_PACKAGE_SECTION Office)
         set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
-        set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "DigitalNote XDN wallet
- DigitalNote is a decentrilized privacy protected peer-to-peer
+        set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "digitalkab XDN wallet
+ digitalkab is a decentrilized privacy protected peer-to-peer
  cryptocurrency and untraceable encrypted messaging system. XDN is
  open-source; its design is public, nobody owns or controls XDN and
  everyone can take part.
  .
- Features of the DigitalNote wallet listed bellow:
+ Features of the digitalkab wallet listed bellow:
  * Classic Bitcoin alike appearance in CryptoNote based cryptocurrency,
    made with QT and open-source.
  * Instant anonymous XDN transfers and transfers notifications
@@ -305,14 +305,14 @@ set(CPACK_PACKAGE_FILE_NAME "${CPACK_DEBIAN_PACKAGE_NAME}-${CPACK_PACKAGE_VERSIO
         set(CPACK_RPM_PACKAGE_LICENSE "MIT")
         set(CPACK_RPM_PACKAGE_GROUP Office)
         set(CPACK_RPM_PACKAGE_REQUIRES "qt5-qtbase >= 5.3.2, qt5-qtbase-gui >= 5.3.2")
-        set(CPACK_RPM_PACKAGE_SUMMARY "DigitalNote XDN wallet")
-        set(CPACK_RPM_PACKAGE_DESCRIPTION "Open-source DigitalNote XDN GUI wallet
- DigitalNote is a decentrilized privacy protected peer-to-peer
+        set(CPACK_RPM_PACKAGE_SUMMARY "digitalkab XDN wallet")
+        set(CPACK_RPM_PACKAGE_DESCRIPTION "Open-source digitalkab XDN GUI wallet
+ digitalkab is a decentrilized privacy protected peer-to-peer
  cryptocurrency and untraceable encrypted messaging system. XDN is
  open-source; its design is public, nobody owns or controls XDN and
  everyone can take part.
 
- Features of the DigitalNote wallet listed bellow:
+ Features of the digitalkab wallet listed bellow:
  *Classic Bitcoin alike appearance in CryptoNote based cryptocurrency,
     made with QT and open-source.
  *Instant anonymous XDN transfers and transfers notifications
