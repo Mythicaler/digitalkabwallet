@@ -1,10 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=digitalkab Wallet
-Comment=digitalkab wallet
-Exec=digitalkabwallet
+Name=DigitalNote Wallet
+Comment=DigitalNote wallet
+Exec=digitalnotewallet
 Terminal=false
 Type=Application
-Icon=digitalkab
-MimeType=x-scheme-handler/digitalkabwallet;
+Icon=digitalnote
+MimeType=x-scheme-handler/digitalnotewallet;
 Categories=Office;Finance;
